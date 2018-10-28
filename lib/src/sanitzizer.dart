@@ -1,5 +1,4 @@
 import 'package:validator/src/validator_base.dart';
-import 'package:validator/src/helpers.dart';
 
 Map _default_normalize_email_options = {'lowercase': true};
 
@@ -126,8 +125,7 @@ String escape(String str) {
 /// GMail addresses have dots removed in the local part and are stripped of
 /// tags (e.g. `some.one+tag@gmail.com` becomes `someone@gmail.com`) and all
 /// `@googlemail.com` addresses are normalized to `@gmail.com`.
-String normalizeEmail(String email, [Map options]) {
-  options = merge(options, _default_normalize_email_options);
+String normalizeEmail(String email, [bool lowercase = true]) {
   if (isEmail(email) == false) {
     return '';
   }
@@ -135,12 +133,12 @@ String normalizeEmail(String email, [Map options]) {
   List parts = email.split('@');
   parts[1] = parts[1].toLowerCase();
 
-  if (options['lowercase'] == true) {
+  if (lowercase == true) {
     parts[0] = parts[0].toLowerCase();
   }
 
   if (parts[1] == 'gmail.com' || parts[1] == 'googlemail.com') {
-    if (options['lowercase'] == false) {
+    if (lowercase == false) {
       parts[0] = parts[0].toLowerCase();
     }
     parts[0] = parts[0].replaceAll('\.', '').split('+')[0];
